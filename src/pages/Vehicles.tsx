@@ -1,32 +1,23 @@
-import { forwardRef, useState } from 'react'
+import { useState } from 'react'
 import { useStateMachine } from 'little-state-machine'
 
 import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
-import Snackbar from '@mui/material/Snackbar'
-import MuiAlert, { AlertProps } from '@mui/material/Alert'
 
 import AddUploadActions from '../components/AddUploadActions'
 import Vehicle from '../components/Vehicle'
 import VehicleModal from '../components/VehicleModal'
 import { updateMainStore } from '../stores/mainStore'
+import { updateUiStore } from '../stores/uiStore'
 import { IVehicle } from '../types/types'
-
-const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
-  props,
-  ref,
-) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
-})
 
 const Vehicles = () => {
   const [open, setOpen] = useState(false)
   const [index, setIndex] = useState(-1)
-  const [error, setError] = useState(false)
 
-  const { actions, state } = useStateMachine({ updateMainStore })
+  const { actions, state } = useStateMachine({ updateMainStore, updateUiStore })
 
   const { mainStore } = state
 
@@ -35,6 +26,12 @@ const Vehicles = () => {
   const updateVehicles = (newVehicles: IVehicle[]) => {
     actions.updateMainStore({
       vehicles: newVehicles,
+    })
+  }
+
+  const setError = () => {
+    actions.updateUiStore({
+      error: true,
     })
   }
 
@@ -52,7 +49,7 @@ const Vehicles = () => {
       updateVehicles(newVehicles)
       setOpen(false)
     } else {
-      setError(true)
+      setError()
     }
   }
 
@@ -93,7 +90,7 @@ const Vehicles = () => {
       updateVehicles(newVehicles)
       setOpen(false)
     } else {
-      setError(true)
+      setError()
     }
   }
 
@@ -163,11 +160,6 @@ const Vehicles = () => {
         onAdd={onAdd}
         onEdit={onEdit}
       />
-      <Snackbar open={error} autoHideDuration={6000} onClose={() => setError(false)}>
-        <Alert onClose={() => setError(false)} severity="error" sx={{ width: '100%' }}>
-          This id is already in use!
-        </Alert>
-      </Snackbar>
     </Grid>
   )
 }

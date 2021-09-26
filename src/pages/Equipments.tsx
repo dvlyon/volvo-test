@@ -1,32 +1,23 @@
-import { forwardRef, useState } from 'react'
+import { useState } from 'react'
 import { useStateMachine } from 'little-state-machine'
 
 import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
-import Snackbar from '@mui/material/Snackbar'
-import MuiAlert, { AlertProps } from '@mui/material/Alert'
 
 import AddUploadActions from '../components/AddUploadActions'
 import Equipment from '../components/Equipment'
 import EquipmentModal from '../components/EquipmentModal'
 import { updateMainStore } from '../stores/mainStore'
+import { updateUiStore } from '../stores/uiStore'
 import { IEquipment } from '../types/types'
-
-const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
-  props,
-  ref,
-) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
-})
 
 const Equipments = () => {
   const [open, setOpen] = useState(false)
   const [index, setIndex] = useState(-1)
-  const [error, setError] = useState(false)
 
-  const { actions, state } = useStateMachine({ updateMainStore })
+  const { actions, state } = useStateMachine({ updateMainStore, updateUiStore })
 
   const { mainStore } = state
 
@@ -35,6 +26,12 @@ const Equipments = () => {
   const updateEquipments = (newEquipments: IEquipment[]) => {
     actions.updateMainStore({
       equipments: newEquipments,
+    })
+  }
+
+  const setError = () => {
+    actions.updateUiStore({
+      error: true,
     })
   }
 
@@ -52,7 +49,7 @@ const Equipments = () => {
       updateEquipments(newEquipments)
       setOpen(false)
     } else {
-      setError(true)
+      setError()
     }
   }
 
@@ -87,7 +84,7 @@ const Equipments = () => {
       updateEquipments(newEquipments)
       setOpen(false)
     } else {
-      setError(true)
+      setError()
     }
   }
 
@@ -157,11 +154,6 @@ const Equipments = () => {
         onAdd={onAdd}
         onEdit={onEdit}
       />
-      <Snackbar open={error} autoHideDuration={6000} onClose={() => setError(false)}>
-        <Alert onClose={() => setError(false)} severity="error" sx={{ width: '100%' }}>
-          This id is already in use!
-        </Alert>
-      </Snackbar>
     </Grid>
   )
 }

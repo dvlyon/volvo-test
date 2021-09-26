@@ -18,6 +18,7 @@ import MenuIcon from '@mui/icons-material/Menu'
 
 import Footer from './Footer'
 import Links from './Links'
+import Snackbar from './Snackbar'
 import TitleRouter from './TitleRouter'
 
 const drawerWidth: number = 240
@@ -124,29 +125,30 @@ const Layout = ({ children }: ILayout) => {
         <Links />
       </Drawer>
       <Box
-          component="main"
-          sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === 'light'
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
-            flexGrow: 1,
-            height: '100vh',
-            overflow: 'auto',
-          }}
-        >
-          <Toolbar />
-          <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                { children }
-              </Grid>
-              <Grid item xs={12}>
-                <Footer />
-              </Grid>
+        component="main"
+        sx={{
+          backgroundColor: (theme) =>
+            theme.palette.mode === 'light'
+              ? theme.palette.grey[100]
+              : theme.palette.grey[900],
+          flexGrow: 1,
+          height: '100vh',
+          overflow: 'auto',
+        }}
+      >
+        <Toolbar />
+        <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              { children }
             </Grid>
-          </Container>
-        </Box>
+            <Grid item xs={12}>
+              <Footer />
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
+      <Snackbar />
     </Box>
   )
 }
