@@ -21,7 +21,7 @@ const Vehicles = () => {
 
   const { mainStore } = state
 
-  const { vehicles } = mainStore
+  const { vehicles, favoriteVehicles } = mainStore
 
   const updateVehicles = (newVehicles: IVehicle[]) => {
     actions.updateMainStore({
@@ -124,6 +124,35 @@ const Vehicles = () => {
     }
   }
 
+  const toggleFav = (id: string) => {
+    const newFavoriteVehicles = [...favoriteVehicles]
+
+    const index = favoriteVehicles.indexOf(id)
+
+    if (index >= 0) {
+      newFavoriteVehicles.splice(index, 1)
+    } else {
+      newFavoriteVehicles.push(id)
+    }
+
+    actions.updateMainStore({
+      favoriteVehicles: newFavoriteVehicles,
+    })
+  }
+
+  vehicles.sort((a, b) => {
+    const isAFav = favoriteVehicles.some(fv => fv === a.id)
+    const isBFav = favoriteVehicles.some(fv => fv === b.id)
+
+    if (isAFav && !isBFav) {
+      return -1
+    }
+    if (!isAFav && isBFav) {
+      return 1
+    }
+    return 0
+  })
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} md={6}>
@@ -151,6 +180,7 @@ const Vehicles = () => {
           handleDelete={onDelete}
           handleUp={handleUp}
           handleDown={handleDown}
+          toggleFav={toggleFav}
         />
       ))}
       <VehicleModal

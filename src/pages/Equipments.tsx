@@ -21,7 +21,7 @@ const Equipments = () => {
 
   const { mainStore } = state
 
-  const { equipments } = mainStore
+  const { equipments, favoriteEquipments } = mainStore
 
   const updateEquipments = (newEquipments: IEquipment[]) => {
     actions.updateMainStore({
@@ -118,6 +118,35 @@ const Equipments = () => {
     }
   }
 
+  const toggleFav = (id: number) => {
+    const newFavoriteEquipments = [...favoriteEquipments]
+
+    const index = favoriteEquipments.indexOf(id)
+
+    if (index >= 0) {
+      newFavoriteEquipments.splice(index, 1)
+    } else {
+      newFavoriteEquipments.push(id)
+    }
+
+    actions.updateMainStore({
+      favoriteEquipments: newFavoriteEquipments,
+    })
+  }
+
+  equipments.sort((a, b) => {
+    const isAFav = favoriteEquipments.some(fe => fe === a.id)
+    const isBFav = favoriteEquipments.some(fe => fe === b.id)
+
+    if (isAFav && !isBFav) {
+      return -1
+    }
+    if (!isAFav && isBFav) {
+      return 1
+    }
+    return 0
+  })
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} md={6}>
@@ -145,6 +174,7 @@ const Equipments = () => {
           handleDelete={onDelete}
           handleUp={handleUp}
           handleDown={handleDown}
+          toggleFav={toggleFav}
         />
       ))}
       <EquipmentModal

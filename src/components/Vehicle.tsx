@@ -17,6 +17,8 @@ import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import IconButton from '@mui/material/IconButton'
 
+import FavoriteIcon from '@mui/icons-material/Favorite'
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 
@@ -29,6 +31,7 @@ const Vehicle = ({
   handleDelete,
   handleUp,
   handleDown,
+  toggleFav,
 }: {
   vehicle: IVehicle
   index: number
@@ -36,7 +39,7 @@ const Vehicle = ({
   handleDelete: (index: number) => void
   handleUp: (index: number) => void
   handleDown: (index: number) => void
-
+  toggleFav: (id: string) => void
 }) => {
   const [open, setOpen] = useState(false)
 
@@ -44,7 +47,7 @@ const Vehicle = ({
 
   const { mainStore } = state
 
-  const { equipments, vehicles } = mainStore
+  const { equipments, vehicles, favoriteVehicles } = mainStore
 
   return (
     <Grid item xs={12} md={6} lg={4} xl={3}>
@@ -52,6 +55,17 @@ const Vehicle = ({
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
             { vehicle.name }
+            <IconButton
+              aria-label="fav"
+              size="small"
+              onClick={() => toggleFav(vehicle.id)}
+              sx={{ float: 'right', color: 'red' }}
+            >
+              {favoriteVehicles.find(fv => fv === vehicle.id) ?
+                <FavoriteIcon fontSize="inherit" /> :
+                <FavoriteBorderIcon fontSize="inherit" />
+              }
+            </IconButton>
           </Typography>
           <TableContainer component={Paper}>
             <Table size="small" aria-label="vehicle table">

@@ -16,6 +16,8 @@ import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 
+import FavoriteIcon from '@mui/icons-material/Favorite'
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 
@@ -28,6 +30,7 @@ const Equipment = ({
   handleDelete,
   handleUp,
   handleDown,
+  toggleFav,
 }: {
   equipment: IEquipment
   index: number
@@ -35,12 +38,13 @@ const Equipment = ({
   handleDelete: (index: number) => void
   handleUp: (index: number) => void
   handleDown: (index: number) => void
+  toggleFav: (id: number) => void
 }) => {
   const { state } = useStateMachine()
 
   const { mainStore } = state
 
-  const { equipments, vehicles } = mainStore
+  const { equipments, vehicles, favoriteEquipments } = mainStore
 
   const inUse = vehicles.filter(v => v.equipments.includes(equipment.id)).length
 
@@ -50,6 +54,17 @@ const Equipment = ({
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
             { equipment.name }
+            <IconButton
+              aria-label="fav"
+              size="small"
+              onClick={() => toggleFav(equipment.id)}
+              sx={{ float: 'right', color: 'red' }}
+            >
+              {favoriteEquipments.find(fe => fe === equipment.id) ?
+                <FavoriteIcon fontSize="inherit" /> :
+                <FavoriteBorderIcon fontSize="inherit" />
+              }
+            </IconButton>
           </Typography>
           <TableContainer component={Paper}>
             <Table size="small" aria-label="vehicle table">

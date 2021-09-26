@@ -7,6 +7,8 @@ declare module "little-state-machine" {
     mainStore: {
       equipments: IEquipment[],
       vehicles: IVehicle[],
+      favoriteEquipments: number[],
+      favoriteVehicles: string[],
     },
     uiStore: {
       error: boolean,
