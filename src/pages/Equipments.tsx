@@ -66,6 +66,9 @@ const Equipments = () => {
 
   return (
     <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <h2>Equipments</h2>
+      </Grid>
       <Grid item xs={12} md={6} lg={4} xl={3}>
         <Card>
           <CardContent>

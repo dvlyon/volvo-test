@@ -20,6 +20,9 @@ const Dashboard = () => {
 
   return (
     <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <h2>Dashboard</h2>
+      </Grid>
       <Grid item xs={6}>
         <Card>
           <CardActionArea component={RouterLink} to='/vehicles'>
