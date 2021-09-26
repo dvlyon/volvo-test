@@ -52,7 +52,10 @@ const style = {
   p: 4,
 }
 
-const Vehicle = ({ vehicle }: { vehicle: IVehicle }) => {
+const Vehicle = ({ vehicle, index }: {
+  vehicle: IVehicle
+  index: number
+}) => {
   const [open, setOpen] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
   const [id, setId] = useState(vehicle.id)
@@ -208,10 +211,20 @@ const Vehicle = ({ vehicle }: { vehicle: IVehicle }) => {
             Delete
           </Button>
           <Box display='flex' flexDirection='row-reverse' width='100%'>
-            <IconButton aria-label="delete" size="small" onClick={moveDown}>
+            <IconButton
+              aria-label="move down"
+              size="small"
+              onClick={moveDown}
+              disabled={index > 0}
+            >
               <KeyboardArrowDownIcon fontSize="inherit" />
             </IconButton>
-            <IconButton aria-label="delete" size="small" onClick={moveUp}>
+            <IconButton
+              aria-label="move up"
+              size="small"
+              onClick={moveUp}
+              disabled={index < vehicles.length -1}
+            >
               <KeyboardArrowUpIcon fontSize="inherit" />
             </IconButton>
           </Box>

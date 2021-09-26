@@ -46,7 +46,10 @@ const style = {
   p: 4,
 }
 
-const Equipment = ({ equipment }: { equipment: IEquipment }) => {
+const Equipment = ({ equipment, index }: {
+  equipment: IEquipment
+  index: number
+}) => {
   const [modalOpen, setModalOpen] = useState(false)
   const [id, setId] = useState(equipment.id)
   const [name, setName] = useState(equipment.name)
@@ -152,10 +155,20 @@ const Equipment = ({ equipment }: { equipment: IEquipment }) => {
             Delete
           </Button>
           <Box display='flex' flexDirection='row-reverse' width='100%'>
-          <IconButton aria-label="delete" size="small" onClick={moveDown}>
+            <IconButton
+              aria-label="move down"
+              size="small"
+              onClick={moveDown}
+              disabled={index > 0}
+            >
               <KeyboardArrowDownIcon fontSize="inherit" />
             </IconButton>
-            <IconButton aria-label="delete" size="small" onClick={moveUp}>
+            <IconButton
+              aria-label="move up"
+              size="small"
+              onClick={moveUp}
+              disabled={index < equipments.length -1}
+            >
               <KeyboardArrowUpIcon fontSize="inherit" />
             </IconButton>
           </Box>

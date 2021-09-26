@@ -104,8 +104,12 @@ const Vehicles = () => {
           </CardActions>
         </Card>
       </Grid>
-      {vehicles.map(vehicle => (
-        <Vehicle key={'vehicle' + vehicle.id} vehicle={vehicle} />
+      {vehicles.map((vehicle, index) => (
+        <Vehicle
+          key={'vehicle' + vehicle.id}
+          vehicle={vehicle}
+          index={index}
+        />
       ))}
       <VehicleModal
         open={open}

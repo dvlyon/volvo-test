@@ -100,8 +100,12 @@ const Equipments = () => {
           </CardActions>
         </Card>
       </Grid>
-      {equipments.map(equipment => (
-        <Equipment key={'equipment' + equipment.id} equipment={equipment} />
+      {equipments.map((equipment, index) => (
+        <Equipment
+          key={'equipment' + equipment.id}
+          equipment={equipment}
+          index={index}
+        />
       ))}
       <EquipmentModal
         open={open}
