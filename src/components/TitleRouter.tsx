@@ -3,7 +3,7 @@ import { Switch, Route } from 'react-router-dom'
 const TitleRouter = () => (
   <Switch>
     <Route path="/about">
-      David Lyon's Test
+      Information
     </Route>
     <Route path="/equipments">
       Equipments

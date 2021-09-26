@@ -30,11 +30,11 @@ const Links = () => (
       </ListItemIcon>
       <ListItemText primary="Equipments" />
     </ListItem>
-    <ListItem button component={RouterLink} to='/about'>
+    <ListItem button component={RouterLink} to='/info'>
       <ListItemIcon>
         <InfoIcon />
       </ListItemIcon>
-      <ListItemText primary="About" />
+      <ListItemText primary="Info" />
     </ListItem>
   </List>
 )
