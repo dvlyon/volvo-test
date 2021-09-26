@@ -4,12 +4,24 @@ import { Link as RouterLink } from 'react-router-dom'
 import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
-import CardMedia from '@mui/material/CardMedia'
+import MuiCardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
 import CardActionArea from '@mui/material/CardActionArea'
 
 import car from '../assets/car.svg'
 import equip from '../assets/equip.svg'
+
+const CardMedia = ({ src }: { src: string }) => (
+  <div style={{ padding: '16px' }}>
+    <MuiCardMedia
+      component="img"
+      height="140"
+      src={src}
+      alt="Vehicles"
+      sx={{ objectFit: 'fill' }}
+    />
+  </div>
+)
 
 const Dashboard = () => {
   const { state } = useStateMachine()
@@ -26,13 +38,7 @@ const Dashboard = () => {
       <Grid item xs={6}>
         <Card>
           <CardActionArea component={RouterLink} to='/vehicles'>
-            <CardMedia
-              component="img"
-              height="360"
-              src={car}
-              alt="Vehicles"
-              sx={{ objectFit: 'fill' }}
-            />
+            <CardMedia src={car} />
             <CardContent>
               <Typography gutterBottom variant="h5" component="div">
                 Vehicles
@@ -47,13 +53,7 @@ const Dashboard = () => {
       <Grid item xs={6}>
         <Card>
           <CardActionArea component={RouterLink} to='/equipments'>
-            <CardMedia
-              component="img"
-              height="360"
-              src={equip}
-              alt="Equipments"
-              sx={{ objectFit: 'fill' }}
-            />
+            <CardMedia src={equip} />
             <CardContent>
               <Typography gutterBottom variant="h5" component="div">
                 Equipments
