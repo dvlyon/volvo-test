@@ -143,8 +143,9 @@ const VehicleModal = ({
         <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
           <FormLabel component="legend">Equipments</FormLabel>
           <FormGroup>
-            {equipments.map((equipment) => (
+            {equipments.map(equipment => (
               <FormControlLabel
+                key={'vehicle' + index + 'equip' + equipment.id}
                 control={
                   <Checkbox
                     checked={equips && !!equips.find(e => e === equipment.id)}
