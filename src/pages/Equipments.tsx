@@ -32,6 +32,12 @@ const Equipments = () => {
 
   const { equipments } = mainStore
 
+  const updateEquipments = (newEquipments: IEquipment[]) => {
+    actions.updateMainStore({
+      equipments: newEquipments,
+    })
+  }
+
   const handleAdd = () => {
     setOpen(true)
     setIndex(-1)
@@ -43,9 +49,7 @@ const Equipments = () => {
     newEquipments.push(equipment)
 
     if (newEquipments.filter(e => e.id === equipment.id).length <= 1) {
-      actions.updateMainStore({
-        equipments: newEquipments,
-      })
+      updateEquipments(newEquipments)
       setOpen(false)
     } else {
       setError(true)
@@ -65,9 +69,7 @@ const Equipments = () => {
         }
       })
       
-      actions.updateMainStore({
-        equipments: newEquipments,
-      })
+      updateEquipments(newEquipments)
     }
   }
 
@@ -82,9 +84,7 @@ const Equipments = () => {
     newEquipments[index] = equipment
 
     if (newEquipments.filter(e => e.id === equipment.id).length <= 1) {
-      actions.updateMainStore({
-        equipments: newEquipments,
-      })
+      updateEquipments(newEquipments)
       setOpen(false)
     } else {
       setError(true)
@@ -96,9 +96,7 @@ const Equipments = () => {
 
     newEquipments.splice(index, 1)
 
-    actions.updateMainStore({
-      equipments: newEquipments,
-    })
+    updateEquipments(newEquipments)
   }
 
   const handleUp = (index: number) => {
@@ -108,9 +106,7 @@ const Equipments = () => {
       const dummy = equipments[index - 1]
       newEquipments[index - 1] = equipments[index]
       newEquipments[index] = dummy
-      actions.updateMainStore({
-        equipments: newEquipments,
-      })
+      updateEquipments(newEquipments)
     }
   }
 
@@ -121,9 +117,7 @@ const Equipments = () => {
       const dummy = equipments[index + 1]
       newEquipments[index + 1] = equipments[index]
       newEquipments[index] = dummy
-      actions.updateMainStore({
-        equipments: newEquipments,
-      })
+      updateEquipments(newEquipments)
     }
   }
 

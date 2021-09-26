@@ -1,4 +1,4 @@
-import { forwardRef, useState } from 'react'
+import { useState } from 'react'
 import { useStateMachine } from 'little-state-machine'
 
 import Box from '@mui/material/Box'
@@ -16,119 +16,93 @@ import TableContainer from '@mui/material/TableContainer'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import IconButton from '@mui/material/IconButton'
-import Modal from '@mui/material/Modal'
-import TextField from '@mui/material/TextField'
-import Snackbar from '@mui/material/Snackbar'
-import MuiAlert, { AlertProps } from '@mui/material/Alert'
-import Divider from '@mui/material/Divider'
-import FormLabel from '@mui/material/FormLabel'
-import FormControl from '@mui/material/FormControl'
-import FormGroup from '@mui/material/FormGroup'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import Checkbox from '@mui/material/Checkbox'
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 
-import { updateMainStore } from '../stores/mainStore'
 import { IVehicle } from '../types/types'
 
-const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
-  props,
-  ref,
-) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
-})
-
-const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-}
-
-const Vehicle = ({ vehicle, index }: {
+const Vehicle = ({
+  vehicle,
+  index,
+  handleEdit,
+  handleDelete,
+  handleUp,
+  handleDown,
+}: {
   vehicle: IVehicle
   index: number
+  handleEdit: (index: number) => void
+  handleDelete: (index: number) => void
+  handleUp: (index: number) => void
+  handleDown: (index: number) => void
+
 }) => {
   const [open, setOpen] = useState(false)
-  const [modalOpen, setModalOpen] = useState(false)
-  const [id, setId] = useState(vehicle.id)
-  const [name, setName] = useState(vehicle.name)
-  const [driver, setDriver] = useState(vehicle.driver)
-  const [status, setStatus] = useState(vehicle.status)
-  const [fuelType, setFuelType] = useState(vehicle.fuelType)
-  const [equips, setEquips] = useState(vehicle.equipments)
-  const [error, setError] = useState(false)
 
-  const { actions, state } = useStateMachine({ updateMainStore })
+  const { state } = useStateMachine()
 
   const { mainStore } = state
 
   const { equipments, vehicles } = mainStore
 
-  const onDelete = () => {
-    const newVehicles = [...vehicles]
+  // const onDelete = () => {
+  //   const newVehicles = [...vehicles]
 
-    newVehicles.splice(vehicles.indexOf(vehicle), 1)
+  //   newVehicles.splice(vehicles.indexOf(vehicle), 1)
 
-    actions.updateMainStore({
-      vehicles: newVehicles,
-    })
-  }
+  //   actions.updateMainStore({
+  //     vehicles: newVehicles,
+  //   })
+  // }
 
-  const onEdit = () => {
-    const newVehicles = [...vehicles]
+  // const onEdit = () => {
+  //   const newVehicles = [...vehicles]
 
-    newVehicles[vehicles.indexOf(vehicle)] = {
-      id,
-      name,
-      driver,
-      status,
-      fuelType,
-      equipments: equips,
-    }
+  //   newVehicles[vehicles.indexOf(vehicle)] = {
+  //     id,
+  //     name,
+  //     driver,
+  //     status,
+  //     fuelType,
+  //     equipments: equips,
+  //   }
 
-    if (newVehicles.filter(e => e.id === id).length <= 1) {
-      actions.updateMainStore({
-        vehicles: newVehicles,
-      })
-      setModalOpen(false)
-    } else {
-      setError(true)
-    }
-  }
+  //   if (newVehicles.filter(e => e.id === id).length <= 1) {
+  //     actions.updateMainStore({
+  //       vehicles: newVehicles,
+  //     })
+  //     setModalOpen(false)
+  //   } else {
+  //     setError(true)
+  //   }
+  // }
 
-  const moveUp = () => {
-    const newVehicles = [...vehicles]
-    const index = vehicles.indexOf(vehicle)
-    if (index > 0) {
-      const dummy = vehicles[index - 1]
-      newVehicles[index - 1] = vehicle
-      newVehicles[index] = dummy
-      actions.updateMainStore({
-        vehicles: newVehicles,
-      })
-    }
-  }
+  // const moveUp = () => {
+  //   const newVehicles = [...vehicles]
+  //   const index = vehicles.indexOf(vehicle)
+  //   if (index > 0) {
+  //     const dummy = vehicles[index - 1]
+  //     newVehicles[index - 1] = vehicle
+  //     newVehicles[index] = dummy
+  //     actions.updateMainStore({
+  //       vehicles: newVehicles,
+  //     })
+  //   }
+  // }
 
-  const moveDown = () => {
-    const newVehicles = [...vehicles]
-    const index = vehicles.indexOf(vehicle)
-    if (index < vehicles.length - 1) {
-      const dummy = vehicles[index + 1]
-      newVehicles[index + 1] = vehicle
-      newVehicles[index] = dummy
-      actions.updateMainStore({
-        vehicles: newVehicles,
-      })
-    }
-  }
+  // const moveDown = () => {
+  //   const newVehicles = [...vehicles]
+  //   const index = vehicles.indexOf(vehicle)
+  //   if (index < vehicles.length - 1) {
+  //     const dummy = vehicles[index + 1]
+  //     newVehicles[index + 1] = vehicle
+  //     newVehicles[index] = dummy
+  //     actions.updateMainStore({
+  //       vehicles: newVehicles,
+  //     })
+  //   }
+  // }
 
   return (
     <Grid item xs={12} md={6} lg={4} xl={3}>
@@ -204,128 +178,32 @@ const Vehicle = ({ vehicle, index }: {
           </TableContainer>
         </CardContent>
         <CardActions>
-          <Button onClick={() => setModalOpen(true)}>
+          <Button onClick={() => handleEdit(index)}>
             Edit
           </Button>
-          <Button variant="outlined" color="error" onClick={onDelete}>
+          <Button variant="outlined" color="error" onClick={() => handleDelete(index)}>
             Delete
           </Button>
           <Box display='flex' flexDirection='row-reverse' width='100%'>
             <IconButton
               aria-label="move down"
               size="small"
-              onClick={moveDown}
-              disabled={index > 0}
+              onClick={() => handleDown(index)}
+              disabled={index >= vehicles.length - 1}
             >
               <KeyboardArrowDownIcon fontSize="inherit" />
             </IconButton>
             <IconButton
               aria-label="move up"
               size="small"
-              onClick={moveUp}
-              disabled={index < vehicles.length -1}
+              onClick={() => handleUp(index)}
+              disabled={index <= 0}
             >
               <KeyboardArrowUpIcon fontSize="inherit" />
             </IconButton>
           </Box>
         </CardActions>
       </Card>
-      <Modal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            { vehicle.name }
-          </Typography>
-          <TextField
-            id="id-input"
-            label="id"
-            variant="standard"
-            value={id}
-            onChange={e => setId(e.target.value)}
-          />
-          <TextField
-            id="name-input"
-            label="name"
-            variant="standard"
-            value={name}
-            onChange={e => setName(e.target.value)}
-          />
-          <TextField
-            id="driver-input"
-            label="driver"
-            variant="standard"
-            value={driver}
-            onChange={e => setDriver(e.target.value)}
-          />
-          <TextField
-            id="status-input"
-            label="status"
-            variant="standard"
-            value={status}
-            onChange={e => setStatus(e.target.value)}
-          />
-          <TextField
-            id="fuelType-input"
-            label="fuelType"
-            variant="standard"
-            value={fuelType}
-            onChange={e => setFuelType(e.target.value)}
-          />
-          <Divider sx={{ margin: '16px 0' }} />
-          <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
-            <FormLabel component="legend">Equipments</FormLabel>
-            <FormGroup>
-              {equipments.map((equipment) => (
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={equips && !!equips.find(e => e === equipment.id)}
-                      onChange={e => {
-                        const newEquips = [...equips]
-                        const index = newEquips.indexOf(equipment.id)
-
-                        if (e.target.checked && index < 0) {
-                          newEquips.push(equipment.id)
-                        } else if (index >= 0) {
-                          newEquips.splice(index, 1)
-                        }
-
-                        setEquips(newEquips)
-                      }}
-                      name={equipment.name}
-                    />
-                  }
-                  label={equipment.name}
-                />
-              ))}
-            </FormGroup>
-          </FormControl>
-          <Divider sx={{ margin: '16px 0' }} />
-          <Button onClick={onEdit}>
-            Save
-          </Button>
-          <Button variant="outlined" color="error" onClick={() => {
-            setId(vehicle.id)
-            setName(vehicle.name)
-            setDriver(vehicle.driver)
-            setStatus(vehicle.status)
-            setFuelType(vehicle.fuelType)
-            setEquips(vehicle.equipments)
-            setModalOpen(false)
-          }}>
-            Cancel
-          </Button>
-        </Box>
-      </Modal>
-      <Snackbar open={error} autoHideDuration={6000} onClose={() => setError(false)}>
-        <Alert onClose={() => setError(false)} severity="error" sx={{ width: '100%' }}>
-          This id is already in use!
-        </Alert>
-      </Snackbar>
     </Grid>
   )
 }

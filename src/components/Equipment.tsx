@@ -86,7 +86,7 @@ const Equipment = ({
               aria-label="move down"
               size="small"
               onClick={() => handleDown(index)}
-              disabled={index >= equipments.length -1}
+              disabled={index >= equipments.length - 1}
             >
               <KeyboardArrowDownIcon fontSize="inherit" />
             </IconButton>

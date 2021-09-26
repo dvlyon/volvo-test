@@ -1,10 +1,12 @@
-import { useState } from 'react'
+import { forwardRef, useState } from 'react'
 import { useStateMachine } from 'little-state-machine'
 
 import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
+import Snackbar from '@mui/material/Snackbar'
+import MuiAlert, { AlertProps } from '@mui/material/Alert'
 
 import AddUploadActions from '../components/AddUploadActions'
 import Vehicle from '../components/Vehicle'
@@ -12,14 +14,47 @@ import VehicleModal from '../components/VehicleModal'
 import { updateMainStore } from '../stores/mainStore'
 import { IVehicle } from '../types/types'
 
+const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
+  props,
+  ref,
+) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
+})
+
 const Vehicles = () => {
   const [open, setOpen] = useState(false)
+  const [index, setIndex] = useState(-1)
+  const [error, setError] = useState(false)
 
   const { actions, state } = useStateMachine({ updateMainStore })
 
   const { mainStore } = state
 
   const { vehicles } = mainStore
+
+  const updateVehicles = (newVehicles: IVehicle[]) => {
+    actions.updateMainStore({
+      vehicles: newVehicles,
+    })
+  }
+
+  const handleAdd = () => {
+    setOpen(true)
+    setIndex(-1)
+  }
+
+  const onAdd = (vehicle: IVehicle) => {
+    const newVehicles = [...vehicles]
+
+    newVehicles.push(vehicle)
+
+    if (newVehicles.filter(e => e.id === vehicle.id).length <= 1) {
+      updateVehicles(newVehicles)
+      setOpen(false)
+    } else {
+      setError(true)
+    }
+  }
 
   const addVehicles = (jsonVehicles: any) => {
     if (jsonVehicles) {
@@ -44,6 +79,54 @@ const Vehicles = () => {
     }
   }
 
+  const handleEdit = (index: number) => {
+    setOpen(true)
+    setIndex(index)
+  }
+
+  const onEdit = (index: number, vehicle: IVehicle) => {
+    const newVehicles = [...vehicles]
+
+    newVehicles[index] = vehicle
+
+    if (newVehicles.filter(e => e.id === vehicle.id).length <= 1) {
+      updateVehicles(newVehicles)
+      setOpen(false)
+    } else {
+      setError(true)
+    }
+  }
+
+  const onDelete = (index: number) => {
+    const newVehicles = [...vehicles]
+
+    newVehicles.splice(index, 1)
+
+    updateVehicles(newVehicles)
+  }
+
+  const handleUp = (index: number) => {
+    const newVehicles = [...vehicles]
+
+    if (index > 0) {
+      const dummy = vehicles[index - 1]
+      newVehicles[index - 1] = vehicles[index]
+      newVehicles[index] = dummy
+      updateVehicles(newVehicles)
+    }
+  }
+
+  const handleDown = (index: number) => {
+    const newVehicles = [...vehicles]
+    
+    if (index < vehicles.length - 1) {
+      const dummy = vehicles[index + 1]
+      newVehicles[index + 1] = vehicles[index]
+      newVehicles[index] = dummy
+      updateVehicles(newVehicles)
+    }
+  }
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} md={6}>
@@ -59,7 +142,7 @@ const Vehicles = () => {
               Add vehicles manually or load from a local JSON file.
             </Typography>
           </CardContent>
-          <AddUploadActions addData={addVehicles} setOpen={setOpen} />
+          <AddUploadActions addData={addVehicles} setOpen={handleAdd} />
         </Card>
       </Grid>
       {vehicles.map((vehicle, index) => (
@@ -67,12 +150,24 @@ const Vehicles = () => {
           key={'vehicle' + vehicle.id}
           vehicle={vehicle}
           index={index}
+          handleEdit={handleEdit}
+          handleDelete={onDelete}
+          handleUp={handleUp}
+          handleDown={handleDown}
         />
       ))}
       <VehicleModal
         open={open}
         setOpen={setOpen}
+        index={index}
+        onAdd={onAdd}
+        onEdit={onEdit}
       />
+      <Snackbar open={error} autoHideDuration={6000} onClose={() => setError(false)}>
+        <Alert onClose={() => setError(false)} severity="error" sx={{ width: '100%' }}>
+          This id is already in use!
+        </Alert>
+      </Snackbar>
     </Grid>
   )
 }
