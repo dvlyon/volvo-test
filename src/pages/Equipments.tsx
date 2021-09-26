@@ -42,8 +42,11 @@ const Equipments = () => {
       const newEquipments = [ ...equipments ]
 
       jsonEquipments.forEach((equipment: IEquipment) => {
-        if (!equipments.some(e => e.id === equipment.id)) {
-          newEquipments.push(equipment)
+        if (equipment.id && !equipments.some(e => e.id === equipment.id)) {
+          newEquipments.push({
+            id: equipment.id,
+            name: equipment.name || '',
+          })
         }
       })
       

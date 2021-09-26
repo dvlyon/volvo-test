@@ -2,17 +2,7 @@ import { Dispatch, forwardRef, SetStateAction, useState } from 'react'
 import { useStateMachine } from 'little-state-machine'
 
 import Button from '@mui/material/Button'
-import Grid from '@mui/material/Grid'
-import Card from '@mui/material/Card'
-import CardActions from '@mui/material/CardActions'
-import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TableRow from '@mui/material/TableRow'
-import Paper from '@mui/material/Paper'
 import Box from '@mui/material/Box'
 import Modal from '@mui/material/Modal'
 import TextField from '@mui/material/TextField'
@@ -21,7 +11,6 @@ import MuiAlert, { AlertProps } from '@mui/material/Alert'
 import Divider from '@mui/material/Divider'
 
 import { updateMainStore } from '../stores/mainStore'
-import { IEquipment } from '../types/types'
 
 const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -68,6 +57,8 @@ const EquipmentModal = ({ open, setOpen }: {
       actions.updateMainStore({
         equipments: newEquipments,
       })
+      setId(0)
+      setName('')
       setOpen(false)
     } else {
       setError(true)

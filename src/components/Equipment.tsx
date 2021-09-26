@@ -19,6 +19,10 @@ import TextField from '@mui/material/TextField'
 import Snackbar from '@mui/material/Snackbar'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
 import Divider from '@mui/material/Divider'
+import IconButton from '@mui/material/IconButton'
+
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 
 import { updateMainStore } from '../stores/mainStore'
 import { IEquipment } from '../types/types'
@@ -52,7 +56,7 @@ const Equipment = ({ equipment }: { equipment: IEquipment }) => {
 
   const { mainStore } = state
 
-  const { equipments } = mainStore
+  const { equipments, vehicles } = mainStore
 
   const onDelete = () => {
     const newEquipments = [ ...equipments ]
@@ -65,7 +69,7 @@ const Equipment = ({ equipment }: { equipment: IEquipment }) => {
   }
 
   const onEdit = () => {
-    const newEquipments = [ ...equipments ]
+    const newEquipments = [...equipments]
 
     newEquipments[equipments.indexOf(equipment)] = {
       id,
@@ -81,6 +85,34 @@ const Equipment = ({ equipment }: { equipment: IEquipment }) => {
       setError(true)
     }
   }
+
+  const moveUp = () => {
+    const newEquipments = [...equipments]
+    const index = equipments.indexOf(equipment)
+    if (index > 0) {
+      const dummy = equipments[index - 1]
+      newEquipments[index - 1] = equipment
+      newEquipments[index] = dummy
+      actions.updateMainStore({
+        equipments: newEquipments,
+      })
+    }
+  }
+
+  const moveDown = () => {
+    const newEquipments = [...equipments]
+    const index = equipments.indexOf(equipment)
+    if (index < equipments.length - 1) {
+      const dummy = equipments[index + 1]
+      newEquipments[index + 1] = equipment
+      newEquipments[index] = dummy
+      actions.updateMainStore({
+        equipments: newEquipments,
+      })
+    }
+  }
+
+  const inUse = vehicles.filter(v => v.equipments.includes(equipment.id)).length
 
   return (
     <Grid item xs={12} md={6} lg={4} xl={3}>
@@ -106,6 +138,11 @@ const Equipment = ({ equipment }: { equipment: IEquipment }) => {
               </TableBody>
             </Table>
           </TableContainer>
+          <Divider sx={{ margin: '16px 0' }} />
+          { inUse > 0 ?
+            <span>Currently equipped on { inUse } vehicles.</span> :
+            <span>Not currently equipped.</span>
+          }
         </CardContent>
         <CardActions>
           <Button onClick={() => setModalOpen(true)}>
@@ -114,6 +151,14 @@ const Equipment = ({ equipment }: { equipment: IEquipment }) => {
           <Button variant="outlined" color="error" onClick={onDelete}>
             Delete
           </Button>
+          <Box display='flex' flexDirection='row-reverse' width='100%'>
+          <IconButton aria-label="delete" size="small" onClick={moveDown}>
+              <KeyboardArrowDownIcon fontSize="inherit" />
+            </IconButton>
+            <IconButton aria-label="delete" size="small" onClick={moveUp}>
+              <KeyboardArrowUpIcon fontSize="inherit" />
+            </IconButton>
+          </Box>
         </CardActions>
       </Card>
       <Modal

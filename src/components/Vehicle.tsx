@@ -101,6 +101,32 @@ const Vehicle = ({ vehicle }: { vehicle: IVehicle }) => {
     }
   }
 
+  const moveUp = () => {
+    const newVehicles = [...vehicles]
+    const index = vehicles.indexOf(vehicle)
+    if (index > 0) {
+      const dummy = vehicles[index - 1]
+      newVehicles[index - 1] = vehicle
+      newVehicles[index] = dummy
+      actions.updateMainStore({
+        vehicles: newVehicles,
+      })
+    }
+  }
+
+  const moveDown = () => {
+    const newVehicles = [...vehicles]
+    const index = vehicles.indexOf(vehicle)
+    if (index < vehicles.length - 1) {
+      const dummy = vehicles[index + 1]
+      newVehicles[index + 1] = vehicle
+      newVehicles[index] = dummy
+      actions.updateMainStore({
+        vehicles: newVehicles,
+      })
+    }
+  }
+
   return (
     <Grid item xs={12} md={6} lg={4} xl={3}>
       <Card>
@@ -123,6 +149,7 @@ const Vehicle = ({ vehicle }: { vehicle: IVehicle }) => {
                             aria-label="expand row"
                             size="small"
                             onClick={() => setOpen(!open)}
+                            disabled={vehicle.equipments && vehicle.equipments.length <= 0}
                           >
                             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                           </IconButton>
@@ -180,6 +207,14 @@ const Vehicle = ({ vehicle }: { vehicle: IVehicle }) => {
           <Button variant="outlined" color="error" onClick={onDelete}>
             Delete
           </Button>
+          <Box display='flex' flexDirection='row-reverse' width='100%'>
+            <IconButton aria-label="delete" size="small" onClick={moveDown}>
+              <KeyboardArrowDownIcon fontSize="inherit" />
+            </IconButton>
+            <IconButton aria-label="delete" size="small" onClick={moveUp}>
+              <KeyboardArrowUpIcon fontSize="inherit" />
+            </IconButton>
+          </Box>
         </CardActions>
       </Card>
       <Modal
@@ -263,11 +298,11 @@ const Vehicle = ({ vehicle }: { vehicle: IVehicle }) => {
           <Button variant="outlined" color="error" onClick={() => {
             setId(vehicle.id)
             setName(vehicle.name)
-            setModalOpen(false)
             setDriver(vehicle.driver)
             setStatus(vehicle.status)
             setFuelType(vehicle.fuelType)
             setEquips(vehicle.equipments)
+            setModalOpen(false)
           }}>
             Cancel
           </Button>

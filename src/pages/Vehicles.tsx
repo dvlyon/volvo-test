@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useStateMachine } from 'little-state-machine'
 
 import { styled } from '@mui/material/styles'
@@ -13,6 +14,7 @@ import AddBoxIcon from '@mui/icons-material/AddBox'
 import FileUploadIcon from '@mui/icons-material/FileUpload'
 
 import Vehicle from '../components/Vehicle'
+import VehicleModal from '../components/VehicleModal'
 import { updateMainStore } from '../stores/mainStore'
 import { IVehicle } from '../types/types'
 
@@ -21,6 +23,8 @@ const Input = styled('input')({
 })
 
 const Vehicles = () => {
+  const [open, setOpen] = useState(false)
+
   const { actions, state } = useStateMachine({ updateMainStore })
 
   const { mainStore } = state
@@ -38,8 +42,15 @@ const Vehicles = () => {
       const newVehicles = [ ...vehicles ]
 
       jsonVehicles.forEach((vehicle: IVehicle) => {
-        if (!vehicles.some(v => v.id === vehicle.id)) {
-          newVehicles.push(vehicle)
+        if (vehicle.id && !vehicles.some(v => v.id === vehicle.id)) {
+          newVehicles.push({
+            id: vehicle.id,
+            name: vehicle.name || '',
+            driver: vehicle.driver || '',
+            status: vehicle.status || '',
+            fuelType: vehicle.fuelType || '',
+            equipments: vehicle.equipments || [],
+          })
         }
       })
       
@@ -75,6 +86,7 @@ const Vehicles = () => {
               component="span"
               endIcon={<AddBoxIcon />}
               sx={{ marginRight: '6px' }}
+              onClick={() => setOpen(true)}
             >
               Add
             </Button>
@@ -95,6 +107,10 @@ const Vehicles = () => {
       {vehicles.map(vehicle => (
         <Vehicle key={'vehicle' + vehicle.id} vehicle={vehicle} />
       ))}
+      <VehicleModal
+        open={open}
+        setOpen={setOpen}
+      />
     </Grid>
   )
 }
