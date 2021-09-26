@@ -1,4 +1,4 @@
-import { Dispatch, forwardRef, SetStateAction, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { useStateMachine } from 'little-state-machine'
 
 import Button from '@mui/material/Button'
@@ -6,18 +6,9 @@ import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Modal from '@mui/material/Modal'
 import TextField from '@mui/material/TextField'
-import Snackbar from '@mui/material/Snackbar'
-import MuiAlert, { AlertProps } from '@mui/material/Alert'
 import Divider from '@mui/material/Divider'
 
-import { updateMainStore } from '../stores/mainStore'
-
-const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
-  props,
-  ref,
-) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
-})
+import { IEquipment } from '../types/types'
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -31,87 +22,90 @@ const style = {
   p: 4,
 }
 
-const EquipmentModal = ({ open, setOpen }: {
+const EquipmentModal = ({
+  open,
+  setOpen,
+  index,
+  onAdd,
+  onEdit,
+}: {
   open: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
+  index: number
+  onAdd: (equipment: IEquipment) => void
+  onEdit: (index: number, equipment: IEquipment) => void
 }) => {
   const [id, setId] = useState(0)
   const [name, setName] = useState('')
-  const [error, setError] = useState(false)
 
-  const { actions, state } = useStateMachine({ updateMainStore })
+  const { state } = useStateMachine()
 
   const { mainStore } = state
 
   const { equipments } = mainStore
 
-  const onSave = () => {
-    const newEquipments = [ ...equipments ]
+  useEffect(() => {
+    if (index >= 0 && equipments[index]) {
+      setId(equipments[index].id)
+      setName(equipments[index].name)
+    } else {
+      setId(0)
+      setName('')
+    }
+  }, [index, equipments])
 
-    newEquipments.push({
+  const handleAdd = () => {
+    onAdd({
       id,
       name,
     })
+  }
 
-    if (newEquipments.filter(e => e.id === id).length <= 1) {
-      actions.updateMainStore({
-        equipments: newEquipments,
-      })
-      setId(0)
-      setName('')
-      setOpen(false)
-    } else {
-      setError(true)
-    }
+  const handleEdit = () => {
+    onEdit(index, {
+      id,
+      name,
+    })
   }
 
   return (
-    <>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Add Equipment
-          </Typography>
-          <TextField
-            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-            id="id-input"
-            label="id"
-            variant="standard"
-            value={id}
-            type="number"
-            onChange={e => setId(parseInt(e.target.value, 10))}
-          />
-          <TextField
-            id="name-input"
-            label="name"
-            variant="standard"
-            value={name}
-            onChange={e => setName(e.target.value)}
-          />
-          <Divider sx={{ margin: '16px 0' }} />
-          <Button onClick={onSave}>
-            Save
-          </Button>
-          <Button variant="outlined" color="error" onClick={() => {
-            setId(0)
-            setName('')
-            setOpen(false)
-          }}>
-            Cancel
-          </Button>
-        </Box>
-      </Modal>
-      <Snackbar open={error} autoHideDuration={6000} onClose={() => setError(false)}>
-        <Alert onClose={() => setError(false)} severity="error" sx={{ width: '100%' }}>
-          This id is already in use!
-        </Alert>
-      </Snackbar>
-    </>
+    <Modal
+      open={open}
+      onClose={() => setOpen(false)}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box sx={style}>
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          {index >= 0 ? name : 'Add Equipment'}
+        </Typography>
+        <TextField
+          inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+          id="id-input"
+          label="id"
+          variant="standard"
+          value={id}
+          type="number"
+          onChange={e => setId(parseInt(e.target.value, 10))}
+        />
+        <TextField
+          id="name-input"
+          label="name"
+          variant="standard"
+          value={name}
+          onChange={e => setName(e.target.value)}
+        />
+        <Divider sx={{ margin: '16px 0' }} />
+        <Button onClick={index >= 0 ? handleEdit : handleAdd}>
+          {index >= 0 ? 'Edit' : 'Save'}
+        </Button>
+        <Button variant="outlined" color="error" onClick={() => {
+          setOpen(false)
+        }}>
+          Cancel
+        </Button>
+      </Box>
+    </Modal>
   )
 }
 
