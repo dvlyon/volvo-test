@@ -18,6 +18,7 @@ import MenuIcon from '@mui/icons-material/Menu'
 
 import Footer from './Footer'
 import Links from './Links'
+import TitleRouter from './TitleRouter'
 
 const drawerWidth: number = 240
 
@@ -102,7 +103,7 @@ const Layout = ({ children }: ILayout) => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            David Lyon's Test
+            <TitleRouter />
           </Typography>
         </Toolbar>
       </AppBar>

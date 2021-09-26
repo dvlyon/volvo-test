@@ -3,7 +3,6 @@ import { BrowserRouter } from 'react-router-dom'
 
 import Layout from './components/Layout'
 import Router from './components/Router'
-
 import { mainStore } from './stores/mainStore'
 
 createStore({
