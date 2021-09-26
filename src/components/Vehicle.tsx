@@ -46,64 +46,6 @@ const Vehicle = ({
 
   const { equipments, vehicles } = mainStore
 
-  // const onDelete = () => {
-  //   const newVehicles = [...vehicles]
-
-  //   newVehicles.splice(vehicles.indexOf(vehicle), 1)
-
-  //   actions.updateMainStore({
-  //     vehicles: newVehicles,
-  //   })
-  // }
-
-  // const onEdit = () => {
-  //   const newVehicles = [...vehicles]
-
-  //   newVehicles[vehicles.indexOf(vehicle)] = {
-  //     id,
-  //     name,
-  //     driver,
-  //     status,
-  //     fuelType,
-  //     equipments: equips,
-  //   }
-
-  //   if (newVehicles.filter(e => e.id === id).length <= 1) {
-  //     actions.updateMainStore({
-  //       vehicles: newVehicles,
-  //     })
-  //     setModalOpen(false)
-  //   } else {
-  //     setError(true)
-  //   }
-  // }
-
-  // const moveUp = () => {
-  //   const newVehicles = [...vehicles]
-  //   const index = vehicles.indexOf(vehicle)
-  //   if (index > 0) {
-  //     const dummy = vehicles[index - 1]
-  //     newVehicles[index - 1] = vehicle
-  //     newVehicles[index] = dummy
-  //     actions.updateMainStore({
-  //       vehicles: newVehicles,
-  //     })
-  //   }
-  // }
-
-  // const moveDown = () => {
-  //   const newVehicles = [...vehicles]
-  //   const index = vehicles.indexOf(vehicle)
-  //   if (index < vehicles.length - 1) {
-  //     const dummy = vehicles[index + 1]
-  //     newVehicles[index + 1] = vehicle
-  //     newVehicles[index] = dummy
-  //     actions.updateMainStore({
-  //       vehicles: newVehicles,
-  //     })
-  //   }
-  // }
-
   return (
     <Grid item xs={12} md={6} lg={4} xl={3}>
       <Card>

@@ -3,24 +3,11 @@ import { useStateMachine } from 'little-state-machine'
 
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-import Box from '@mui/material/Box'
-import Modal from '@mui/material/Modal'
 import TextField from '@mui/material/TextField'
 import Divider from '@mui/material/Divider'
 
+import Modal from './Modal'
 import { IEquipment } from '../types/types'
-
-const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-}
 
 const EquipmentModal = ({
   open,
@@ -71,40 +58,38 @@ const EquipmentModal = ({
   return (
     <Modal
       open={open}
-      onClose={() => setOpen(false)}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
+      setOpen={setOpen}
+      aria-labelledby="equipment-modal-title"
+      aria-describedby="equipment-modal-description"
     >
-      <Box sx={style}>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          {index >= 0 ? name : 'Add Equipment'}
-        </Typography>
-        <TextField
-          inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-          id="id-input"
-          label="id"
-          variant="standard"
-          value={id}
-          type="number"
-          onChange={e => setId(parseInt(e.target.value, 10))}
-        />
-        <TextField
-          id="name-input"
-          label="name"
-          variant="standard"
-          value={name}
-          onChange={e => setName(e.target.value)}
-        />
-        <Divider sx={{ margin: '16px 0' }} />
-        <Button onClick={index >= 0 ? handleEdit : handleAdd}>
-          {index >= 0 ? 'Edit' : 'Save'}
-        </Button>
-        <Button variant="outlined" color="error" onClick={() => {
-          setOpen(false)
-        }}>
-          Cancel
-        </Button>
-      </Box>
+      <Typography id="equipment-modal-title" variant="h6" component="h2">
+        {index >= 0 ? name : 'Add Equipment'}
+      </Typography>
+      <TextField
+        inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+        id="id-input"
+        label="id"
+        variant="standard"
+        value={id}
+        type="number"
+        onChange={e => setId(parseInt(e.target.value, 10))}
+      />
+      <TextField
+        id="name-input"
+        label="name"
+        variant="standard"
+        value={name}
+        onChange={e => setName(e.target.value)}
+      />
+      <Divider sx={{ margin: '16px 0' }} />
+      <Button onClick={index >= 0 ? handleEdit : handleAdd}>
+        {index >= 0 ? 'Edit' : 'Save'}
+      </Button>
+      <Button variant="outlined" color="error" onClick={() => {
+        setOpen(false)
+      }}>
+        Cancel
+      </Button>
     </Modal>
   )
 }
