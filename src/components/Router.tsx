@@ -1,12 +1,9 @@
 import { Switch, Route } from 'react-router-dom'
 
+import About from '../pages/About'
 import Dashboard from '../pages/Dashboard'
 import Equipments from '../pages/Equipments'
 import Vehicles from '../pages/Vehicles'
-
-function About() {
-  return <h2>Coming soon (?)</h2>
-}
 
 const Router = () => (
   <Switch>
